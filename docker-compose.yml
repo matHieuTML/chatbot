@@ -1,0 +1,19 @@
+version: '3'
+services:
+  front-app:
+    build:
+      context: ./front-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front-app:/app
+    depends_on:
+      - back
+
+  back:
+    build:
+      context: ./back
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./back:/app

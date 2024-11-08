@@ -1,0 +1,22 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "back of chatbot project",
+  "main": "main.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "chatbot",
+    "chatgpt",
+    "ai",
+    "sponsored",
+    "elon",
+    "musk",
+    "programming",
+    "ai",
+    "future"
+  ],
+  "author": "Space Devs",
+  "license": "ISC"
+}
