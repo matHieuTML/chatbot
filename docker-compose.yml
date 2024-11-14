@@ -2,11 +2,11 @@ version: '3'
 services:
   front-app:
     build:
-      context: ./front-app
+      context: ./front
     ports:
       - "3000:3000"
     volumes:
-      - ./front-app:/app
+      - ./front:/app
     depends_on:
       - back
 
