@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./front:/app
+      - my_chatbot_data:/front:/app
     depends_on:
       - back
 
@@ -16,4 +16,19 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./back:/app
+      - my_chatbot_data:/back:app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    environment:
+      GLIBC_TUNABLES: glibc.pthread.rseq=0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  my_chatbot_data:
+  mongo_data:
