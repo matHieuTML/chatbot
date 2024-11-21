@@ -12,7 +12,7 @@ const fixedFields = {
 // Fonction pour obtenir des données générées par l'API OpenAI
 const getGeneratedData = async (openai) => {
     try {
-        const prompt = "Génère un nom français, un email avec le domaine @stu-digital-campus.fr et une punchline créative et humoristique en français pour une présentation personnelle. La punchline doit refléter l'idée suivante : 'C'est pour cela qu'il faut savoir parler de soi et que la première impression reste. Que tu sois professionnel(le), timide, sérieux(se) ou encore sur le ton de l'humour. Il n'y a pas de mauvaise manière de parler de soi. Soyez-vous mêmes ! Attention vos phrases de présentation seront lues donc soignez votre première impression.' Exemple : 'Je suis tellement bon en cuisine que Philippe Etchebest, j'en fais mon commis !'. Formate la réponse comme suit : Nom: [Nom], Email: [email@stu-digital-campus.fr], Punchline: [Punchline].";
+        const prompt = "Génère un nom et un prénom français, puis crée un email avec le domaine @stu-digital-campus.fr en utilisant la première lettre du prénom suivie du nom de famille. Par exemple, si le prénom est 'Kuba' et le nom est 'Peront', l'email sera 'k_peront@stu-digital-campus.fr'. Ensuite, génère une punchline créative et humoristique en français pour une présentation personnelle. La punchline doit refléter l'idée suivante : 'C'est pour cela qu'il faut savoir parler de soi et que la première impression reste. Que tu sois professionnel(le), timide, sérieux(se) ou encore sur le ton de l'humour. Il n'y a pas de mauvaise manière de parler de soi. Soyez-vous mêmes ! Attention vos phrases de présentation seront lues donc soignez votre première impression.' Exemple : 'Je suis tellement bon en cuisine que Philippe Etchebest, j'en fais mon commis !'. Formate la réponse comme suit : Prénom: [Prénom], Nom: [Nom], Email: [email@stu-digital-campus.fr], Punchline: [Punchline].";
 
         const response = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -22,15 +22,17 @@ const getGeneratedData = async (openai) => {
         const generatedContent = response.choices[0].message.content.trim();
         
         // Utiliser des expressions régulières pour extraire les données
+        const prenomMatch = generatedContent.match(/Prénom:\s*([^\n,]+)/);
         const nomMatch = generatedContent.match(/Nom:\s*([^\n,]+)/);
         const emailMatch = generatedContent.match(/Email:\s*([^\n,]+)/);
         const punchlineMatch = generatedContent.match(/Punchline:\s*([^\n]+)/);
 
+        const prenom = prenomMatch ? prenomMatch[1].trim() : "Prénom Inconnu";
         const nom = nomMatch ? nomMatch[1].trim() : "Nom Inconnu";
         const email = emailMatch ? emailMatch[1].trim() : "email@stu-digital-campus.fr";
         const punchline = punchlineMatch ? punchlineMatch[1].trim() : "Punchline Inconnue";
 
-        return { nom, email, punchline };
+        return { prenom, nom, email, punchline };
     } catch (error) {
         console.error("Error fetching data from OpenAI:", error);
         throw error;
@@ -42,7 +44,7 @@ const generateRandomData = async (openai) => {
     const generatedData = await getGeneratedData(openai);
     return {
         ...fixedFields, // Inclure les champs fixes
-        "entry.2005620554": generatedData.nom, // Nom généré par OpenAI
+        "entry.2005620554": `${generatedData.prenom} ${generatedData.nom}`, // Nom complet généré par OpenAI
         "entry.1045781291": generatedData.email, // Email généré par OpenAI
         "entry.839337160": generatedData.punchline, // Punchline générée par OpenAI
     };
